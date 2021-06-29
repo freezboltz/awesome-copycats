@@ -14,22 +14,59 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- My color table Inspired by Apple iMac 24"
+-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+local iMacColor                     = {}
+iMacColor.pink                      = "#b72c31"
+iMacColor.pink_text                 = "#b62c31"
+iMacColor.pink_light                = "#eeb8b0"
+iMacColor.orange                    = "#e36942"
+iMacColor.orange_text               = "#ef5602"
+iMacColor.orange_light              = "#e9aa95"
+iMacColor.yellow                    = "#d48207"
+iMacColor.yellow_text               = "#c98000"
+iMacColor.yellow_light              = "#eaca96"
+iMacColor.green                     = "#10505b"
+iMacColor.green_text                = "#006e82"
+iMacColor.green_light               = "#a4beb2"
+iMacColor.blue                      = "#25476d"
+iMacColor.blue_text                 = "#26476d"
+iMacColor.blue_light                = "#a8bed2"
+iMacColor.purple                    = "#353a71"
+iMacColor.purple_text               = "#4f5381"
+iMacColor.purple_light              = "#abacca"
+iMacColor.silver                    = "#c7c8ca"
+iMacColor.silver_text               = "#a1a1a6"
+
+-- generic custom colors
+local genericColor                  = {}
+genericColor.black                  = "#000000"
+genericColor.white                  = "#ffffff"
+genericColor.ruby                   = "#af1d18"
+genericColor.pink                   = "#ff6a98"
+genericColor.yellow_dark            = "#f1af5f"
+genericColor.yellow                 = "#e0da37"
+
 local theme                                     = {}
 theme.confdir                                   = os.getenv("HOME") .. "/.config/awesome/themes/multicolor"
 theme.wallpaper                                 = theme.confdir .. "/wall.png"
-theme.font                                      = "Terminus 8"
-theme.menu_bg_normal                            = "#000000"
-theme.menu_bg_focus                             = "#000000"
-theme.bg_normal                                 = "#000000"
-theme.bg_focus                                  = "#000000"
-theme.bg_urgent                                 = "#000000"
-theme.fg_normal                                 = "#aaaaaa"
-theme.fg_focus                                  = "#ff8c00"
-theme.fg_urgent                                 = "#af1d18"
-theme.fg_minimize                               = "#ffffff"
+theme.font                                      = "Hack Nerd Font 9"
+theme.menu_bg_normal                            = genericColor.black
+theme.menu_bg_focus                             = genericColor.black
+theme.bg_normal                                 = genericColor.black
+theme.bg_focus                                  = genericColor.black
+theme.bg_urgent                                 = genericColor.black
+theme.fg_normal                                 = iMacColor.purple
+theme.fg_focus                                  = genericColor.white
+theme.fg_urgent                                 = genericColor.ruby
+theme.fg_minimize                               = genericColor.white
+theme.hotkeys_fg                                = genericColor.pink
+theme.hotkeys_bg                                = genericColor.black
+theme.hotkeys_modifiers_fg                      = iMacColor.purple_light
 theme.border_width                              = dpi(1)
 theme.border_normal                             = "#1c2022"
-theme.border_focus                              = "#606060"
+theme.border_focus                              = "#aee3fc"
 theme.border_marked                             = "#3ca4d8"
 theme.menu_border_width                         = 0
 theme.menu_width                                = dpi(130)
@@ -56,7 +93,7 @@ theme.taglist_squares_sel                       = theme.confdir .. "/icons/squar
 theme.taglist_squares_unsel                     = theme.confdir .. "/icons/square_b.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.useless_gap                               = 0
+theme.useless_gap                               = dpi(2)
 theme.layout_tile                               = theme.confdir .. "/icons/tile.png"
 theme.layout_tilegaps                           = theme.confdir .. "/icons/tilegaps.png"
 theme.layout_tileleft                           = theme.confdir .. "/icons/tileleft.png"
@@ -96,14 +133,14 @@ local markup = lain.util.markup
 -- Textclock
 os.setlocale(os.getenv("LANG")) -- to localize the clock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
-local mytextclock = wibox.widget.textclock(markup("#7788af", "%A %d %B ") .. markup("#ab7367", ">") .. markup("#de5e1e", " %H:%M "))
+local mytextclock = wibox.widget.textclock(markup(iMacColor.orange, "%A %d %B ") .. markup(iMacColor.silver, ">") .. markup(iMacColor.yellow_light, " %H:%M "))
 mytextclock.font = theme.font
 
 -- Calendar
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock },
     notification_preset = {
-        font = "Terminus 10",
+        font = theme.font,
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
@@ -162,7 +199,7 @@ theme.mail = lain.widget.imap({
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, "#e33a6e", cpu_now.usage .. "% "))
+        widget:set_markup(markup.fontfg(theme.font, genericColor.pink, cpu_now.usage .. "% "))
     end
 })
 
@@ -170,7 +207,7 @@ local cpu = lain.widget.cpu({
 local tempicon = wibox.widget.imagebox(theme.widget_temp)
 local temp = lain.widget.temp({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, "#f1af5f", coretemp_now .. "°C "))
+        widget:set_markup(markup.fontfg(theme.font, genericColor.yellow_dark, coretemp_now .. "°C "))
     end
 })
 
@@ -223,7 +260,7 @@ local netupinfo = lain.widget.net({
 local memicon = wibox.widget.imagebox(theme.widget_mem)
 local memory = lain.widget.mem({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, "#e0da37", mem_now.used .. "M "))
+        widget:set_markup(markup.fontfg(theme.font, genericColor.yellow, mem_now.used .. "M "))
     end
 })
 
@@ -289,19 +326,25 @@ function theme.at_screen_connect(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(19), bg = theme.bg_normal, fg = theme.fg_normal })
 
+    space = wibox.widget{
+    markup = ' ',
+    align  = 'center',
+    valign = 'center',
+    widget = wibox.widget.textbox
+    }
+
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            --s.mylayoutbox,
             s.mytaglist,
+            space,
             s.mypromptbox,
             mpdicon,
             theme.mpd.widget,
         },
-        --s.mytasklist, -- Middle widget
-        nil,
+            s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
@@ -321,30 +364,31 @@ function theme.at_screen_connect(s)
             --theme.fs.widget,
             --weathericon,
             --theme.weather.widget,
-            tempicon,
-            temp.widget,
-            baticon,
-            bat.widget,
+            --tempicon,
+            --temp.widget,
+            --baticon,
+            --bat.widget,
             clockicon,
             mytextclock,
+            s.mylayoutbox,
         },
     }
 
     -- Create the bottom wibox
-    s.mybottomwibox = awful.wibar({ position = "bottom", screen = s, border_width = 0, height = dpi(20), bg = theme.bg_normal, fg = theme.fg_normal })
+    --s.mybottomwibox = awful.wibar({ position = "bottom", screen = s, border_width = 0, height = dpi(20), bg = theme.bg_normal, fg = theme.fg_normal })
 
     -- Add widgets to the bottom wibox
-    s.mybottomwibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-        },
-        s.mytasklist, -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            s.mylayoutbox,
-        },
-    }
+--    s.mybottomwibox:setup {
+--        layout = wibox.layout.align.horizontal,
+--        { -- Left widgets
+--            layout = wibox.layout.fixed.horizontal,
+--        },
+--        s.mytasklist, -- Middle widget
+--        { -- Right widgets
+--            layout = wibox.layout.fixed.horizontal,
+--            s.mylayoutbox,
+--        },
+--    }
 end
 
 return theme

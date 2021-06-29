@@ -97,23 +97,26 @@ local themes = {
     "vertex"           -- 10
 }
 
-local chosen_theme = themes[5]
-local modkey       = "Mod4"
-local altkey       = "Mod1"
-local terminal     = "urxvtc"
-local vi_focus     = false -- vi-like client focus https://github.com/lcpz/awesome-copycats/issues/275
-local cycle_prev   = true  -- cycle with only the previously focused client or all https://github.com/lcpz/awesome-copycats/issues/274
-local editor       = os.getenv("EDITOR") or "nvim"
-local browser      = "librewolf"
+local chosen_theme  = themes[5]
+local modkey        = "Mod4"
+local altkey        = "Mod1"
+local terminal      = "st"
+local vi_focus      = false -- vi-like client focus https://github.com/lcpz/awesome-copycats/issues/275
+local cycle_prev    = true  -- cycle with only the previously focused client or all https://github.com/lcpz/awesome-copycats/issues/274
+local editor        = os.getenv("EDITOR") or "vim"
+-- local web_incognito = "firefox -private-window"
+local web_incognito = "brave --incognito"
 
 awful.util.terminal = terminal
-awful.util.tagnames = { "1", "2", "3", "4", "5" }
+awful.util.tagnames = { "1", "2", "3", "4", "5" , "6", "7", "8", "9"}
 awful.layout.layouts = {
-    awful.layout.suit.floating,
-    awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
+    awful.layout.suit.tile,         -- ws 1
+    awful.layout.suit.floating,     -- ws 2
+    awful.layout.suit.tile.left,    -- ws 3
+    awful.layout.suit.tile.bottom,  -- ws 4
+    awful.layout.suit.tile.top,     -- ws 5
+    awful.layout.suit.tile,         -- ws 6
+    awful.layout.suit.floating,     -- ws 7
     --awful.layout.suit.fair,
     --awful.layout.suit.fair.horizontal,
     --awful.layout.suit.spiral,
@@ -250,12 +253,13 @@ root.buttons(mytable.join(
 -- {{{ Key bindings
 
 globalkeys = mytable.join(
-    -- Destroy all notifications
-    awful.key({ "Control",           }, "space", function() naughty.destroy_all_notifications() end,
-              {description = "destroy all notifications", group = "hotkeys"}),
     -- Take a screenshot
     -- https://github.com/lcpz/dots/blob/master/bin/screenshot
     awful.key({ altkey }, "p", function() os.execute("screenshot") end,
+              {description = "take a screenshot", group = "hotkeys"}),
+
+    -- Screenshot program for xfce desktop env.
+    awful.key({ }, "Print", function () awful.util.spawn("xfce4-screenshooter") end,
               {description = "take a screenshot", group = "hotkeys"}),
 
     -- X screen locker
@@ -384,7 +388,14 @@ globalkeys = mytable.join(
               {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
+    awful.key({ modkey, altkey     }, "e",     function () awful.spawn("emacsclient -a 'emacs' -c") end,
+              {description = "emacs client", group = "gui app"}),
 
+              -- Layouts
+    awful.key({ modkey, altkey    }, "j",     function () awful.tag.incwfact( 0.05)           end,
+              {description = "increase master height factor", group = "layout"}),
+    awful.key({ modkey, altkey    }, "k",     function () awful.tag.incwfact(-0.05)           end,
+              {description = "decrease master height factor", group = "layout"}),
     awful.key({ modkey, altkey    }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
     awful.key({ modkey, altkey    }, "h",     function () awful.tag.incmwfact(-0.05)          end,
@@ -429,30 +440,50 @@ globalkeys = mytable.join(
               {description = "-10%", group = "hotkeys"}),
 
     -- ALSA volume control
-    awful.key({ altkey }, "Up",
+    --awful.key({ altkey }, "Up",
+    awful.key({ }, "XF86AudioRaiseVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume up", group = "hotkeys"}),
-    awful.key({ altkey }, "Down",
+    --awful.key({ altkey }, "Down",
+    awful.key({ }, "XF86AudioLowerVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume down", group = "hotkeys"}),
-    awful.key({ altkey }, "m",
+    --awful.key({ altkey }, "m",
+    awful.key({ }, "XF86AudioMute",
         function ()
             os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "toggle mute", group = "hotkeys"}),
+
+    -- Volume controller
+    awful.key({ modkey, altkey }, "p", function () awful.util.spawn(terminal .. " -e pulsemixer") end,
+              {description = "open pulsemixer", group = "launcher"}),
+
     awful.key({ altkey, "Control" }, "m",
         function ()
             os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume 100%", group = "hotkeys"}),
+    awful.key({ altkey, "Control" }, "y",
+        function ()
+            os.execute(string.format("amixer -q set %s 50%%", beautiful.volume.channel))
+            beautiful.volume.update()
+        end,
+        {description = "volume 50%", group = "hotkeys"}),
+    awful.key({ altkey, "Control" }, "7",
+        function ()
+            os.execute(string.format("amixer -q set %s 70%%", beautiful.volume.channel))
+            beautiful.volume.update()
+        end,
+        {description = "volume 70%", group = "hotkeys"}),
     awful.key({ altkey, "Control" }, "0",
         function ()
             os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
@@ -507,8 +538,8 @@ globalkeys = mytable.join(
               {description = "copy gtk to terminal", group = "hotkeys"}),
 
     -- User programs
-    awful.key({ modkey }, "q", function () awful.spawn(browser) end,
-              {description = "run browser", group = "launcher"}),
+    awful.key({ modkey }, "q", function () awful.spawn(web_incognito) end,
+              {description = "run browser in private mode", group = "launcher"}),
 
     -- Default
     --[[ Menubar
@@ -532,8 +563,11 @@ globalkeys = mytable.join(
         {description = "show rofi", group = "launcher"}),
     --]]
     -- Prompt
-    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
+    awful.key({ modkey, "Shift" }, "Return",
+    function ()
+        awful.util.spawn("dmenu_run")
+    end,
+              {description = "show dmenu", group = "launcher"}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -665,6 +699,8 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 
+-- documentation website: https://awesomewm.org/doc/api/libraries/awful.rules.html
+
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
     -- All clients will match this rule.
@@ -710,16 +746,31 @@ awful.rules.rules = {
           "ConfigManager",  -- Thunderbird's about:config.
           "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
         }
-      }, properties = { floating = true }},
+      }, properties = { floating = true} },
 
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
-      }, properties = { titlebars_enabled = true }
+      }, properties = { titlebars_enabled = false }
     },
 
+    --[[
     -- Set Firefox to always map on the tag named "2" on screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { screen = 1, tag = "2" } },
+    { rule = { class = "firefox" },
+     properties = {screen = 1, tag = "2" } },
+     ]]
+
+    { rule = { class = "Gimp", role = "gimp-toolbox-color-dialog" },
+     properties = {ontop = true, floating = true} },
+
+    { rule = { class = "firefox", instance = "Devtools" },
+     properties = {ontop = true, floating = true} },
+
+    { rule = { class = "Gcolor2"},
+     properties = {ontop = true, floating = true} },
+
+    -- Set Xdman to always map on the tag named "7" on screen 1.
+    { rule = { class = "xdman-Main" },
+     properties = {screen = 1, tag = "7" } },
 }
 
 -- }}}
