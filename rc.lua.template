@@ -392,9 +392,9 @@ globalkeys = mytable.join(
               {description = "emacs client", group = "gui app"}),
 
               -- Layouts
-    awful.key({ modkey, altkey    }, "j",     function () awful.tag.incwfact( 0.05)           end,
+    awful.key({ modkey, altkey    }, "j",     function () awful.client.incwfact( 0.05)        end,
               {description = "increase master height factor", group = "layout"}),
-    awful.key({ modkey, altkey    }, "k",     function () awful.tag.incwfact(-0.05)           end,
+    awful.key({ modkey, altkey    }, "k",     function () awful.client.incwfact(-0.05)        end,
               {description = "decrease master height factor", group = "layout"}),
     awful.key({ modkey, altkey    }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
