@@ -324,6 +324,28 @@ globalkeys = mytable.join(
         end,
         {description = "focus right", group = "client"}),
 
+    -- Bydirection window swap
+        awful.key({ altkey, "Control" }, "Left", function ()
+      awful.client.swap.global_bydirection("left")
+      client.focus:raise()
+    end,
+    {description = "swap with left client", group = "client"}),
+    awful.key({ altkey, "Control" }, "Right", function ()
+      awful.client.swap.global_bydirection("right")
+      client.focus:raise()
+    end,
+    {description = "swap with right client", group = "client"}),
+    awful.key({ altkey, "Control" }, "Down", function ()
+      awful.client.swap.global_bydirection("down")
+      client.focus:raise()
+    end,
+    {description = "swap with down client", group = "client"}),
+    awful.key({ altkey, "Control" }, "Up", function ()
+      awful.client.swap.global_bydirection("up")
+      client.focus:raise()
+    end,
+    {description = "swap with up client", group = "client"}),
+
     -- Menu
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
@@ -364,7 +386,7 @@ globalkeys = mytable.join(
         {description = "toggle wibox", group = "awesome"}),
 
     -- On-the-fly useless gaps change
-    awful.key({ altkey, "Control" }, "+", function () lain.util.useless_gaps_resize(1) end,
+    awful.key({ altkey, "Control" }, "=", function () lain.util.useless_gaps_resize(1) end,
               {description = "increment useless gaps", group = "tag"}),
     awful.key({ altkey, "Control" }, "-", function () lain.util.useless_gaps_resize(-1) end,
               {description = "decrement useless gaps", group = "tag"}),
@@ -392,9 +414,9 @@ globalkeys = mytable.join(
               {description = "emacs client", group = "gui app"}),
 
               -- Layouts
-    awful.key({ modkey, altkey    }, "j",     function () awful.client.incwfact( 0.05)        end,
+    awful.key({ modkey, altkey    }, "j",     function () awful.client.incwfact( 0.05)           end,
               {description = "increase master height factor", group = "layout"}),
-    awful.key({ modkey, altkey    }, "k",     function () awful.client.incwfact(-0.05)        end,
+    awful.key({ modkey, altkey    }, "k",     function () awful.client.incwfact(-0.05)           end,
               {description = "decrease master height factor", group = "layout"}),
     awful.key({ modkey, altkey    }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
@@ -408,7 +430,7 @@ globalkeys = mytable.join(
               {description = "increase the number of columns", group = "layout"}),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
+    awful.key({ modkey,           }, "space", function () awful.layout.inc(1)                end,
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
@@ -492,6 +514,7 @@ globalkeys = mytable.join(
         {description = "volume 0%", group = "hotkeys"}),
 
     -- MPD control
+    --[[
     awful.key({ altkey, "Control" }, "Up",
         function ()
             os.execute("mpc toggle")
@@ -529,6 +552,7 @@ globalkeys = mytable.join(
             naughty.notify(common)
         end,
         {description = "mpc on/off", group = "widgets"}),
+        --]]
 
     -- Copy primary to clipboard (terminals to gtk)
     awful.key({ modkey }, "c", function () awful.spawn.with_shell("xsel | xsel -i -b") end,
@@ -593,7 +617,7 @@ clientkeys = mytable.join(
         {description = "toggle fullscreen", group = "client"}),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
               {description = "close", group = "client"}),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
+    awful.key({ modkey, altkey }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
@@ -684,6 +708,7 @@ clientbuttons = mytable.join(
     end),
     awful.button({ modkey }, 1, function (c)
         c:emit_signal("request::activate", "mouse_click", {raise = true})
+        c.floating = true
         awful.mouse.client.move(c)
     end),
     awful.button({ modkey }, 3, function (c)
