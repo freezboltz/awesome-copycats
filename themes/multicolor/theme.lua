@@ -39,6 +39,20 @@ iMacColor.purple_light              = "#abacca"
 iMacColor.silver                    = "#c7c8ca"
 iMacColor.silver_text               = "#a1a1a6"
 
+--  Dracula theme color palette
+Dracula = {}
+Dracula.Background	    = "#282a36"
+Dracula.CurrentLine	    = "#44475a"
+Dracula.Foreground	    = "#f8f8f2"
+Dracula.Comment	        = "#6272a4"
+Dracula.Cyan	        = "#8be9fd"
+Dracula.Green	        = "#50fa7b"
+Dracula.Orange	        = "#ffb86c"
+Dracula.Pink	        = "#ff79c6"
+Dracula.Purple	        = "#bd93f9"
+Dracula.Red	            = "#ff5555"
+Dracula.Yellow	        = "#f1fa8c"
+
 -- generic custom colors
 local genericColor                  = {}
 genericColor.black                  = "#000000"
@@ -61,9 +75,9 @@ theme.fg_normal                                 = iMacColor.purple
 theme.fg_focus                                  = genericColor.white
 theme.fg_urgent                                 = genericColor.ruby
 theme.fg_minimize                               = genericColor.white
-theme.hotkeys_fg                                = genericColor.pink
-theme.hotkeys_bg                                = genericColor.black
-theme.hotkeys_modifiers_fg                      = iMacColor.purple_light
+theme.hotkeys_fg                                = Dracula.Cyan
+theme.hotkeys_bg                                = Dracula.Background
+theme.hotkeys_modifiers_fg                      = Dracula.Pink
 theme.border_width                              = dpi(1)
 theme.border_normal                             = "#1c2022"
 theme.border_focus                              = "#aee3fc"
